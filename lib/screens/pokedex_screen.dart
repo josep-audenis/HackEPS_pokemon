@@ -1,8 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PokedexScreen extends StatelessWidget {
   const PokedexScreen({super.key});
+
+  /// Solicita el permiso para usar la cámara.
+  Future<void> _requestCameraPermission(BuildContext context) async {
+    var status = await Permission.camera.status;
+
+    if (!status.isGranted) {
+      // Solicita permiso de cámara si no está concedido
+      status = await Permission.camera.request();
+      if (!status.isGranted) {
+        // Muestra un diálogo indicando que se necesita el permiso
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text("Permiso requerido"),
+            content: const Text("La aplicación necesita acceso a la cámara para escanear códigos QR."),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cerrar"),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  /// Muestra el escáner QR en un panel flotante.
+  void _showScanner(BuildContext context) async {
+    // Verifica y solicita permisos antes de abrir la cámara
+    await _requestCameraPermission(context);
+
+    // Muestra el escáner QR en un Bottom Sheet
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent, // Fondo transparente
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          maxChildSize: 0.9,
+          minChildSize: 0.4,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                children: [
+                  // Barra superior para deslizar
+                  Container(
+                    width: 50,
+                    height: 5,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  Expanded(
+                    child: MobileScanner(
+                      fit: BoxFit.cover,
+                      onDetect: (BarcodeCapture barcode) {
+                        final String code = barcode.barcodes.isNotEmpty
+                            ? barcode.barcodes.first.rawValue ?? 'Código no detectado'
+                            : 'Código no detectado';
+
+                        print('Código QR detectado: $code');
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +95,7 @@ class PokedexScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Fondo (puedes reemplazarlo con tu contenido principal)
+          // Fondo principal
           Container(
             color: Colors.white,
           ),
@@ -40,13 +122,13 @@ class PokedexScreen extends StatelessWidget {
                         Image.asset(
                           'assets/images/team.png',
                           fit: BoxFit.cover,
-                          height: 24, // Tamaño de la imagen
+                          height: 24,
                         ),
-                        const SizedBox(height: 4), // Espaciado entre imagen y texto
+                        const SizedBox(height: 4),
                         const Text(
                           'Team',
                           style: TextStyle(
-                            fontSize: 10, // Tamaño de la fuente
+                            fontSize: 10,
                             color: Colors.white,
                           ),
                         ),
@@ -84,23 +166,7 @@ class PokedexScreen extends StatelessWidget {
                       const SizedBox(width: 8), // Espaciado
                       FloatingActionButton(
                         heroTag: 'middle',
-                        onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Escanea un QR"),
-                                content: MobileScanner(
-                                  onDetect: (BarcodeCapture barcode) {
-                                    final String code = barcode.rawValue ?? 'Código no detectado';
-                                    print('Código QR detectado: $code');  // Imprime el QR escaneado en la terminal
-                                    Navigator.pop(context);  // Cierra el diálogo después de escanear
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        },
+                        onPressed: () => _showScanner(context),
                         backgroundColor: Colors.grey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -118,7 +184,6 @@ class PokedexScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       const SizedBox(width: 8), // Espaciado
                       FloatingActionButton(
                         heroTag: 'right',
@@ -177,8 +242,4 @@ class PokedexScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-extension on BarcodeCapture {
-  String get rawValue => this.barcodes.isNotEmpty ? this.barcodes.first.rawValue ?? 'Código no detectado' : 'Código no detectado';
 }
