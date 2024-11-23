@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lspokedex/providers/team_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:lspokedex/screens/pokedex_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color(0xFFcc544a),
         centerTitle: false,
@@ -72,15 +74,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 50),
                 // TextField controlado por el TextEditingController
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 80.0),
                   child: TextField(
                     controller: _teamNameController, // Asigna el controlador
+                    style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
-                      labelText: 'Team Name?',
-                      labelStyle: TextStyle(color: Colors.white),
+                      hintText: 'Enter your team name',
+                      hintStyle: TextStyle(color: Colors.white70),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
@@ -105,18 +108,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       bool teamFound = await teamProvider.findAndLoadTeamByName(teamName);
 
                       if (teamFound) {
-                        // TODO: addpokedexScreen 
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => LoginScreen()),
-                        // );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('No se encontró un equipo con el nombre proporcionado.'),
-                          ),
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const PokedexScreen()),
                         );
-                      }},
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            Future.delayed(const Duration(seconds: 2), () {
+                              Navigator.of(context).pop(); // Cierra el diálogo automáticamente
+                            });
+                            return AlertDialog(
+                              content: const Text(
+                                'No se encontró un equipo con el nombre proporcionado.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
