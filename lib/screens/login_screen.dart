@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lspokedex/providers/team_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFcc544a),
+        backgroundColor: const Color(0xFFcc544a),
         centerTitle: false,
         elevation: 0,
       ),
@@ -25,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           // Fondo de color
           Container(
-            color: Color(0xFFcc544a), // El color de fondo de la pantalla
+            color: const Color(0xFFcc544a), // El color de fondo de la pantalla
           ),
 
           // Imagen Pikachu detrás de todos los elementos
@@ -89,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Botón para obtener el valor del TextField y almacenarlo
                 Container(
                   margin: const EdgeInsets.only(top: 16.0),
                   padding: const EdgeInsets.symmetric(horizontal: 80.0),
@@ -97,16 +98,30 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Obtener el valor introducido en el TextField
+                    onPressed: () async {
                       String teamName = _teamNameController.text;
-                      // TODO cridar funcio josep
-                    },
+
+                      final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+                      bool teamFound = await teamProvider.findAndLoadTeamByName(teamName);
+
+                      if (teamFound) {
+                        // TODO: addpokedexScreen 
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => LoginScreen()),
+                        // );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('No se encontró un equipo con el nombre proporcionado.'),
+                          ),
+                        );
+                      }},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                     child: const Text(
                       'Login!!!',
