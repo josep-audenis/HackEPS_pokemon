@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const PokedexScreen(), // Aquí se referencia la pantalla de login
+      home: const LoginScreen(), // Aquí se referencia la pantalla de login
     );
   }
 }
