@@ -21,7 +21,13 @@ void main() {
         print('No se encontraron códigos de localización.');
         expect(eventProvider.locationCodes, isEmpty);
       }
-      // Llamar a la función para cargar los códigos de location_area_encounter
+    });
+
+    test('executeOperationsForLocation should load all cooldown_time codes from real API', () async {
+      await eventProvider.loadLocationCodes();
+      print('execute operations');
+      await eventProvider.executeOperationsForLocations('52c712ae-2f10-44e2-b734-e9659f5617f0'); //testing our group
+      print('executed operations');
     });
   });
 }

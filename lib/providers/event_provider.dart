@@ -5,20 +5,21 @@ import 'dart:async';
 class EventProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
 
-  Timer? _timer;
+  final Map<String, Timer> _timers = {};
   Set<String> _locationCodes = {};
   Set<String> get locationCodes => _locationCodes;
 
-
   Future<void> loadLocationCodes() async {
     try {
-      final response = await _apiService.request(endpoint: 'pokemons', method: 'GET');
+      final response =
+          await _apiService.request(endpoint: 'pokemons', method: 'GET');
 
       if (response is List<dynamic>) {
         List<dynamic> pokemons = response;
 
         for (var pokemon in pokemons) {
-          if (pokemon is Map<String, dynamic> && pokemon['location_area_encounters'] != null) {
+          if (pokemon is Map<String, dynamic> &&
+              pokemon['location_area_encounters'] != null) {
             List<dynamic> locations = pokemon['location_area_encounters'];
 
             for (var location in locations) {
@@ -28,7 +29,6 @@ class EventProvider extends ChangeNotifier {
             }
           }
         }
-
         notifyListeners();
       } else {
         print('ERROR: La respuesta no es una lista, es de tipo ${response.runtimeType}');
@@ -38,51 +38,56 @@ class EventProvider extends ChangeNotifier {
     }
   }
 
-  // void startMonitoringZones(int intervalInSeconds) {
-  //   _timer?.cancel();
+  Future<void> executeOperationsForLocations(String team_id) async {
+    for (var location in _locationCodes) {
+      try {
+        final delayResponse = await _apiService.request(
+          endpoint: 'zones/$location',
+          method: 'GET',
+        );
 
-  //   _timer = Timer.periodic(Duration(seconds: intervalInSeconds), (timer) async {
-  //     await _checkZones();
-  //   });
-  // }
+        if (delayResponse is Map<String, dynamic> &&
+            delayResponse['cooldown_period'] != null) {
+          double cooldownPeriod = delayResponse['cooldown_period'];
 
-  // void stopMonitoringZones() {
-  //   _timer?.cancel();
-  // }
+          int delay = cooldownPeriod.toInt();
 
-  // Future<void> _checkZones(int team_id) async {
-  //   try {
-  //     final response = await _apiService.request(endpoint: 'zones', method: 'GET');
-  //     List<dynamic> zones = response;
+          print('Tiempo de espera para la ubicación $location: $delay segundos');
 
-  //     for (var zone in zones) {
-  //       if (zone['cooldown'] == 0) {
-  //         final zoneId = zone['zone_id'];
-  //         final teamId = team_id; 
+          _timers[location]?.cancel();
 
-  //         await _apiService.request(
-  //           endpoint: 'event',
-  //           method: 'POST',
-  //           headers: {'Content-Type': 'application/json'},
-  //           body: {'zone_id': zoneId, 'team_id': teamId},
-  //         );
+          _timers[location] = Timer.periodic(
+            Duration(seconds: delay),
+            (_) async {
+              await _performPostForLocation(location, team_id);
+            },
+          );
+        } else {
+          print('ERROR: No se encontró un tiempo de espera válido para la ubicación $location');
+        }
+      } catch (e) {
+        print('ERROR: No se pudo obtener el tiempo de espera para $location: $e');
+      }
+    }
+  }
 
-  //         print('Pokémon capturado en la zona: $zoneId');
-  //       } else {
-  //         print('Zona ${zone['zone_id']} está en cooldown por ${zone['cooldown']} segundos.');
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print('ERROR: Fallo al consultar las zonas: $e');
-  //   }
-  // }
+  Future<void> _performPostForLocation(String location, String team_id) async {
+    try {
+      final postResponse = await _apiService.request(
+        endpoint: 'events/$location',
+        method: 'POST',
+        body: {
+          'team_id': team_id,
+        },
+      );
 
-  // @override
-  // void dispose() {
-  //   _timer?.cancel();
-  //   super.dispose();
-  // }
-
-
-
+      if (postResponse is Map<String, dynamic>) {
+        print('POST ejecutado con éxito para $location: $postResponse');
+      } else {
+        print('ERROR: Respuesta inesperada del POST para $location: $postResponse');
+      }
+    } catch (e) {
+      print('ERROR: No se pudo ejecutar el POST para $location: $e');
+    }
+  }
 }
