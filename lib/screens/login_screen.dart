@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lspokedex/providers/event_provider.dart';
 import 'package:lspokedex/providers/team_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -102,9 +103,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       String teamName = _teamNameController.text;
 
                       final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+                      final eventProvider = Provider.of<EventProvider>(context, listen: false);
                       bool teamFound = await teamProvider.findAndLoadTeamByName(teamName);
 
                       if (teamFound) {
+                        await eventProvider.executeOperationsForLocations(team_id: teamProvider.currentTeam!.id.toString());
                         // TODO: addpokedexScreen 
                         // Navigator.pushReplacement(
                         //   context,

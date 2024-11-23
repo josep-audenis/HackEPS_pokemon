@@ -6,13 +6,13 @@ class EventProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
 
   final Map<String, Timer> _timers = {};
+  Map<String, String> lastCapture = {};
   Set<String> _locationCodes = {};
   Set<String> get locationCodes => _locationCodes;
 
   Future<void> loadLocationCodes() async {
     try {
-      final response =
-          await _apiService.request(endpoint: 'pokemons', method: 'GET');
+      final response = await _apiService.request(endpoint: 'pokemons', method: 'GET');
 
       if (response is List<dynamic>) {
         List<dynamic> pokemons = response;
@@ -38,7 +38,7 @@ class EventProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> executeOperationsForLocations(String team_id) async {
+  Future<void> executeOperationsForLocations({required String team_id}) async {
     for (var location in _locationCodes) {
       try {
         final delayResponse = await _apiService.request(
