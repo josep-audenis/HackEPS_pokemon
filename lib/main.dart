@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart'; // Importa la pantalla de login
+import 'screens/login_screen.dart';
+import 'screens/pokedex_screen.dart'; // Importa la pantalla de login
 
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginScreen(), // Aquí se referencia la pantalla de login
+      home: const PokedexScreen(), // Aquí se referencia la pantalla de login
     );
   }
 }

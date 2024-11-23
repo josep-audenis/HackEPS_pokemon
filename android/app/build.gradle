@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.lspokedex"
+    namespace 'com.example.lspokedex'
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
