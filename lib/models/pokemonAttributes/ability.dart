@@ -1,21 +1,24 @@
 import 'package:lspokedex/models/pokemonAttributes/item.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'ability.g.dart';
 
-
+@JsonSerializable()
 class Ability {
-    final Item ability;
-    final bool is_hidden;
-    final int slot;
+  final Item ability;
+  final bool is_hidden;
+  final int slot;
 
-    Ability({required this.ability, required this.is_hidden, required this.slot}); 
+  Ability({
+    required this.ability,
+    required this.is_hidden,
+    required this.slot,
+  });
 
-    //Funció usada per a convertir la resposta del fitxer json a un objecte del tipus Ability
-    factory Ability.jsonToAbility(Map<String, dynamic> json) {
-        return Ability(
-            ability: Item.jsonToItem(json['ability']), 
-            is_hidden: json['is_hidden'],
-            slot: json['slot'],
-        );
-    }
+  factory Ability.fromJson(Map<String, dynamic> json) => _$AbilityFromJson(json);
+  
+  Map<String, dynamic> toJson() => _$AbilityToJson(this);
 }
+
+
 

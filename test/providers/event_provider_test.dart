@@ -12,10 +12,8 @@ void main() {
     });
 
     test('loadLocationCodes should load all location_area_encounter codes from real API', () async {
-      // Llamar a la función para cargar los códigos de location_area_encounter
       await eventProvider.loadLocationCodes();
 
-      // Verificar si se cargaron los códigos
       if (eventProvider.locationCodes.isNotEmpty) {
         print('Códigos de localización encontrados: ${eventProvider.locationCodes}');
         expect(eventProvider.locationCodes, isNotEmpty);
@@ -23,6 +21,7 @@ void main() {
         print('No se encontraron códigos de localización.');
         expect(eventProvider.locationCodes, isEmpty);
       }
+      // Llamar a la función para cargar los códigos de location_area_encounter
     });
   });
 }

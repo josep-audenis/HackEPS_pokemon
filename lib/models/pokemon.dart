@@ -1,98 +1,54 @@
-
-
 import 'package:lspokedex/models/pokemonAttributes/ability.dart';
+import 'package:lspokedex/models/pokemonAttributes/evolvesTo.dart';
 import 'package:lspokedex/models/pokemonAttributes/item.dart';
 import 'package:lspokedex/models/pokemonAttributes/stat.dart';
 import 'package:lspokedex/models/pokemonAttributes/type.dart';
 
+
+import 'package:json_annotation/json_annotation.dart';
+
+part 'pokemon.g.dart';
+
+@JsonSerializable()
 class Pokemon {
-    final int id;
-    final String name;
-    final List<Ability> abilities;
-    final String cries;
-    final int height;
-    final List<String> location_area_encounters;
-    final Item? evolves_to;
-    final List<Item> moves;
-    final List<Item> species;
-    final String image;
-    final List<Stat> stats;
-    final List<Type> types;
-    final int weight;
+  final int id;
+  final String name;
+  final List<Ability> abilities;
+  final String cries;
+  final int height;
+  final List<String> location_area_encounters;
+  final List<EvolvesTo?> evolves_to;
+  final List<Item> moves;
+  final Item species;
+  final String image;
+  final List<Stat> stats;
+  final List<Type> types;
+  final int weight;
 
   Pokemon({
-      required this.id, 
-      required this.name, 
-      required this.abilities, 
-      required this.cries, 
-      required this.height, 
-      required this.location_area_encounters, 
-      required this.evolves_to, 
-      required this.moves, 
-      required this.species, 
-      required this.image, 
-      required this.stats, 
-      required this.types, 
-      required this.weight});
-  
-  //Funció usada per a convertir la resposta del fitxer json a un objecte del tipus Pokemon
-  factory Pokemon.jsonToPokemon(Map<String, dynamic> json) {
-      return Pokemon(
-          id: json['id'],
-          name: json['name'],
-          abilities: (json['abilities'] as List)
-          .map((abilityJson) => Ability.jsonToAbility(abilityJson))
-          .toList(),
-          cries: json['cries'],
-          height: json['height'],
-          location_area_encounters: json['location_area_encounters'],
-          evolves_to: json['evolves_to'] != null ? Item.jsonToItem(json['evolves_to']) : null, 
-          // moves:
-          // species:
-          image: json['image'],
-          // stats:
-          // types: 
-          weight: json['weight'],  
-      );
-  }
- 
+    required this.id,
+    required this.name,
+    required this.abilities,
+    required this.cries,
+    required this.height,
+    required this.location_area_encounters,
+    required this.evolves_to,
+    required this.moves,
+    required this.species,
+    required this.image,
+    required this.stats,
+    required this.types,
+    required this.weight,
+  });
+
+  factory Pokemon.fromJson(Map<String, dynamic> json) => _$PokemonFromJson(json);
+  Map<String, dynamic> toJson() => _$PokemonToJson(this);
 }
-
-
 
 // import 'package:json_annotation/json_annotation.dart';
 
 // part 'models.g.dart';
 
-// @JsonSerializable()
-// class Ability {
-//   final AbilityDetail ability;
-//   final bool is_hidden;
-//   final int slot;
-
-//   Ability({
-//     required this.ability,
-//     required this.is_hidden,
-//     required this.slot,
-//   });
-
-//   factory Ability.fromJson(Map<String, dynamic> json) => _$AbilityFromJson(json);
-//   Map<String, dynamic> toJson() => _$AbilityToJson(this);
-// }
-
-// @JsonSerializable()
-// class AbilityDetail {
-//   final String name;
-//   final String url;
-
-//   AbilityDetail({
-//     required this.name,
-//     required this.url,
-//   });
-
-//   factory AbilityDetail.fromJson(Map<String, dynamic> json) => _$AbilityDetailFromJson(json);
-//   Map<String, dynamic> toJson() => _$AbilityDetailToJson(this);
-// }
 
 // @JsonSerializable()
 // class CaptureEventRequest {
@@ -122,33 +78,8 @@ class Pokemon {
 //   Map<String, dynamic> toJson() => _$CaptureEventResponseToJson(this);
 // }
 
-// @JsonSerializable()
-// class Items {
-//   final String id;
-//   final int pokemon_id;
 
-//   Items({
-//     required this.id,
-//     required this.pokemon_id,
-//   });
-
-//   factory Items.fromJson(Map<String, dynamic> json) => _$ItemsFromJson(json);
-//   Map<String, dynamic> toJson() => _$ItemsToJson(this);
-// }
-
-// @JsonSerializable()
-// class CapturedPokemon {
-//   final String id;
-//   final int pokemon_id;
-
-//   CapturedPokemon({
-//     required this.id,
-//     required this.pokemon_id,
-//   });
-
-//   factory CapturedPokemon.fromJson(Map<String, dynamic> json) => _$CapturedPokemonFromJson(json);
-//   Map<String, dynamic> toJson() => _$CapturedPokemonToJson(this);
-// }
+// 
 
 // @JsonSerializable()
 // class EvolveRequest {
@@ -164,19 +95,6 @@ class Pokemon {
 //   Map<String, dynamic> toJson() => _$EvolveRequestToJson(this);
 // }
 
-// @JsonSerializable()
-// class EvolvesTo {
-//   final String name;
-//   final String id;
-
-//   EvolvesTo({
-//     required this.name,
-//     required this.id,
-//   });
-
-//   factory EvolvesTo.fromJson(Map<String, dynamic> json) => _$EvolvesToFromJson(json);
-//   Map<String, dynamic> toJson() => _$EvolvesToToJson(this);
-// }
 
 // @JsonSerializable()
 // class HTTPValidationError {
@@ -206,41 +124,6 @@ class Pokemon {
 //   Map<String, dynamic> toJson() => _$ValidationErrorToJson(this);
 // }
 
-// @JsonSerializable()
-// class Pokemon {
-//   final int id;
-//   final String name;
-//   final List<Ability> abilities;
-//   final String cries;
-//   final int height;
-//   final List<String> location_area_encounters;
-//   final List<EvolvesTo?> evolves_to;
-//   final List<PokemonMoves> moves;
-//   final Species species;
-//   final String image;
-//   final List<Stat> stats;
-//   final List<Type> types;
-//   final int weight;
-
-//   Pokemon({
-//     required this.id,
-//     required this.name,
-//     required this.abilities,
-//     required this.cries,
-//     required this.height,
-//     required this.location_area_encounters,
-//     required this.evolves_to,
-//     required this.moves,
-//     required this.species,
-//     required this.image,
-//     required this.stats,
-//     required this.types,
-//     required this.weight,
-//   });
-
-//   factory Pokemon.fromJson(Map<String, dynamic> json) => _$PokemonFromJson(json);
-//   Map<String, dynamic> toJson() => _$PokemonToJson(this);
-// }
 
 // @JsonSerializable()
 // class PokemonBattle {
@@ -256,63 +139,8 @@ class Pokemon {
 //   Map<String, dynamic> toJson() => _$PokemonBattleToJson(this);
 // }
 
-// @JsonSerializable()
-// class PokemonMoves {
-//   final String name;
-//   final String url;
 
-//   PokemonMoves({
-//     required this.name,
-//     required this.url,
-//   });
 
-//   factory PokemonMoves.fromJson(Map<String, dynamic> json) => _$PokemonMovesFromJson(json);
-//   Map<String, dynamic> toJson() => _$PokemonMovesToJson(this);
-// }
-
-// @JsonSerializable()
-// class Species {
-//   final String name;
-//   final String url;
-
-//   Species({
-//     required this.name,
-//     required this.url,
-//   });
-
-//   factory Species.fromJson(Map<String, dynamic> json) => _$SpeciesFromJson(json);
-//   Map<String, dynamic> toJson() => _$SpeciesToJson(this);
-// }
-
-// @JsonSerializable()
-// class Stat {
-//   final int base_stat;
-//   final int effort;
-//   final StatDetail stat;
-
-//   Stat({
-//     required this.base_stat,
-//     required this.effort,
-//     required this.stat,
-//   });
-
-//   factory Stat.fromJson(Map<String, dynamic> json) => _$StatFromJson(json);
-//   Map<String, dynamic> toJson() => _$StatToJson(this);
-// }
-
-// @JsonSerializable()
-// class StatDetail {
-//   final String name;
-//   final String url;
-
-//   StatDetail({
-//     required this.name,
-//     required this.url,
-//   });
-
-//   factory StatDetail.fromJson(Map<String, dynamic> json) => _$StatDetailFromJson(json);
-//   Map<String, dynamic> toJson() => _$StatDetailToJson(this);
-// }
 
 // @JsonSerializable()
 // class Team {
@@ -406,33 +234,8 @@ class Pokemon {
 //   Map<String, dynamic> toJson() => _$TournamentTeamToJson(this);
 // }
 
-// @JsonSerializable()
-// class Type {
-//   final int slot;
-//   final TypeDetail type;
 
-//   Type({
-//     required this.slot,
-//     required this.type,
-//   });
 
-//   factory Type.fromJson(Map<String, dynamic> json) => _$TypeFromJson(json);
-//   Map<String, dynamic> toJson() => _$TypeToJson(this);
-// }
-
-// @JsonSerializable()
-// class TypeDetail {
-//   final String name;
-//   final String url;
-
-//   TypeDetail({
-//     required this.name,
-//     required this.url,
-//   });
-
-//   factory TypeDetail.fromJson(Map<String, dynamic> json) => _$TypeDetailFromJson(json);
-//   Map<String, dynamic> toJson() => _$TypeDetailToJson(this);
-// }
 
 // @JsonSerializable()
 // class ZoneResponse {
@@ -468,4 +271,3 @@ class Pokemon {
 
 // // Note: To generate the `*.g.dart` files, you need to run the following command:
 // // flutter pub run build_runner build
-

@@ -1,9 +1,20 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:lspokedex/models/pokemonAttributes/item.dart';
 
-class Stat {
-    final int base_stat;
-    final int effort;
-    final Item stat;
+part 'stat.g.dart';
 
-  Stat({required this.base_stat, required this.effort, required this.stat});
+@JsonSerializable()
+class Stat {
+  final int base_stat;
+  final int effort;
+  final Item stat;
+
+  Stat({
+    required this.base_stat,
+    required this.effort,
+    required this.stat,
+  });
+
+  factory Stat.fromJson(Map<String, dynamic> json) => _$StatFromJson(json);
+  Map<String, dynamic> toJson() => _$StatToJson(this);
 }
