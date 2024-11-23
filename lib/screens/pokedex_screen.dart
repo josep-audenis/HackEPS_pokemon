@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:lspokedex/models/pokemon.dart';
+
+import 'detalles_pokemon_screen.dart';
 
 class PokedexScreen extends StatefulWidget {
   const PokedexScreen({super.key});
@@ -15,7 +18,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
     10,
         (index) => {
       'name': 'Pokémon $index',
-      'imageUrl': 'https://m.media-amazon.com/images/I/61Wd-1u2zUL.__AC_SX300_SY300_QL70_ML2_.jpg', // URL de imagen
+      'imageUrl': 'https://m.media-amazon.com/images/I/61Wd-1u2zUL.__AC_SX300_SY300_QL70_ML2_.jpg',
     },
   );
 
@@ -192,61 +195,68 @@ class _PokedexScreenState extends State<PokedexScreen> {
                     itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Imagen en la parte superior
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(10),
-                                ),
-                                child: Image.network(
-                                  item['imageUrl']!, // URL de la imagen
-                                  fit: BoxFit.cover, // Ajuste de la imagen
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child; // Imagen cargada
-                                    }
-                                    // Muestra un indicador de progreso mientras se carga
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) => const Icon(
-                                    Icons.error, // Icono en caso de error
-                                    color: Colors.red,
+                      return GestureDetector(
+                        onTap: () {
+                          // Navegar a la pantalla de detalles con el Pokémon seleccionado
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetallesPokemonScreen(pokemon: item),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(
+                                    top: Radius.circular(10),
+                                  ),
+                                  child: Image.network(
+                                    item['imageUrl']!, // URL de la imagen
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child; // Imagen cargada
+                                      }
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) => const Icon(
+                                      Icons.error, // Icono en caso de error
+                                      color: Colors.red,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-
-                            // Nombre en la parte inferior
-                            Container(
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(
-                                  bottom: Radius.circular(10),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  item['name']!,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(10),
                                   ),
-                                  textAlign: TextAlign.center,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    item['name']!,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
