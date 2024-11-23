@@ -2,9 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
-class PokedexScreen extends StatelessWidget {
+class PokedexScreen extends StatefulWidget {
   const PokedexScreen({super.key});
+
+  @override
+  _PokedexScreenState createState() => _PokedexScreenState();
+}
+
+class _PokedexScreenState extends State<PokedexScreen> {
+  // Lista de Pokémon de ejemplo
+  final List<Map<String, String>> allItems = List.generate(
+    10,
+        (index) => {
+      'name': 'Pokémon $index',
+      'imageUrl': 'https://m.media-amazon.com/images/I/61Wd-1u2zUL.__AC_SX300_SY300_QL70_ML2_.jpg', // URL de imagen
+    },
+  );
+
+  // Controlador de búsqueda
+  TextEditingController _searchController = TextEditingController();
+
+  // Lista filtrada de elementos según la búsqueda
+  List<Map<String, String>> filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializamos la lista filtrada con todos los elementos
+    filteredItems = allItems;
+
+    // Escuchamos los cambios en el campo de búsqueda
+    _searchController.addListener(_filterItems);
+  }
+
+  // Método para filtrar los elementos según el texto de búsqueda
+  void _filterItems() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      filteredItems = allItems
+          .where((item) =>
+          item['name']!.toLowerCase().contains(query))
+          .toList();
+    });
+  }
 
   /// Solicita el permiso para usar la cámara.
   Future<void> _requestCameraPermission(BuildContext context) async {
@@ -19,7 +59,8 @@ class PokedexScreen extends StatelessWidget {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text("Permiso requerido"),
-            content: const Text("La aplicación necesita acceso a la cámara para escanear códigos QR."),
+            content:
+            const Text("La aplicación necesita acceso a la cámara para escanear códigos QR."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -88,17 +129,131 @@ class PokedexScreen extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    _searchController.removeListener(_filterItems);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFcc544a),
         title: const Text('Pokedex'),
+        actions: [
+          // Campo de búsqueda en la barra de aplicaciones
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: PokedexSearchDelegate(allItems),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [
           // Fondo principal
           Container(
             color: Colors.white,
+          ),
+
+          // Campo de búsqueda
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Search Pokémon...',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Cuadrícula de elementos filtrados
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Número de columnas
+                      crossAxisSpacing: 8, // Espaciado horizontal
+                      mainAxisSpacing: 8, // Espaciado vertical
+                      childAspectRatio: 0.8, // Proporción entre ancho y alto
+                    ),
+                    itemCount: filteredItems.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Imagen en la parte superior
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(10),
+                                ),
+                                child: Image.network(
+                                  item['imageUrl']!, // URL de la imagen
+                                  fit: BoxFit.cover, // Ajuste de la imagen
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child; // Imagen cargada
+                                    }
+                                    // Muestra un indicador de progreso mientras se carga
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) => const Icon(
+                                    Icons.error, // Icono en caso de error
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // Nombre en la parte inferior
+                            Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(
+                                  bottom: Radius.circular(10),
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  item['name']!,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
 
           // Menú flotante
@@ -136,16 +291,16 @@ class PokedexScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8), // Espaciado
+                  const SizedBox(height: 8),
 
-                  // Opciones centrales (tres botones en paralelo)
+                  // Opciones centrales
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       FloatingActionButton(
                         heroTag: 'left',
                         onPressed: () {
-                          // Acción para la opción izquierda
+                          // Acción izquierda
                         },
                         backgroundColor: Colors.grey,
                         child: Column(
@@ -164,7 +319,7 @@ class PokedexScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8), // Espaciado
+                      const SizedBox(width: 8),
                       FloatingActionButton(
                         heroTag: 'middle',
                         onPressed: () => _showScanner(context),
@@ -185,11 +340,11 @@ class PokedexScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8), // Espaciado
+                      const SizedBox(width: 8),
                       FloatingActionButton(
                         heroTag: 'right',
                         onPressed: () {
-                          // Acción para la opción derecha
+                          // Acción derecha
                         },
                         backgroundColor: Colors.grey,
                         child: Column(
@@ -210,13 +365,13 @@ class PokedexScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8), // Espaciado
+                  const SizedBox(height: 8),
 
                   // Opción inferior
                   FloatingActionButton(
                     heroTag: 'down',
                     onPressed: () {
-                      // Acción para la opción inferior
+                      // Acción inferior
                     },
                     backgroundColor: Colors.grey,
                     child: Column(
@@ -239,8 +394,151 @@ class PokedexScreen extends StatelessWidget {
               ),
             ),
           ),
+
+
+
+
+
         ],
       ),
+    );
+  }
+}
+
+class PokedexSearchDelegate extends SearchDelegate {
+  final List<Map<String, String>> items;
+
+  PokedexSearchDelegate(this.items);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final filteredItems = items
+        .where((item) =>
+        item['name']!.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = filteredItems[index];
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                  child: Image.network(
+                    item['imageUrl']!,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error, color: Colors.red),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    item['name']!,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final filteredItems = items
+        .where((item) =>
+        item['name']!.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: filteredItems.length,
+      itemBuilder: (context, index) {
+        final item = filteredItems[index];
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                  child: Image.network(
+                    item['imageUrl']!,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error, color: Colors.red),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Text(
+                    item['name']!,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
