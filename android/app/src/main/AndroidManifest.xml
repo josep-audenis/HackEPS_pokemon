@@ -1,6 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
-	<application
+    <uses-permission android:name="android.permission.camera" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+
+    <application
         android:label="lspokedex"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
