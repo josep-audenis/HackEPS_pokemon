@@ -7,7 +7,6 @@ import 'screens/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializar EventProvider y cargar los códigos antes de arrancar la app
   final eventProvider = EventProvider();
   await eventProvider.loadLocationCodes();
 

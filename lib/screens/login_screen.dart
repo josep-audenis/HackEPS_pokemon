@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lspokedex/providers/event_provider.dart';
 import 'package:lspokedex/providers/team_provider.dart';
+import 'package:lspokedex/utills/constants.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -77,19 +78,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 // TextField controlado por el TextEditingController
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                  child: TextField(
-                    controller: _teamNameController, // Asigna el controlador
-                    decoration: const InputDecoration(
-                      labelText: 'Team Name?',
-                      labelStyle: TextStyle(color: Colors.white),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                    ),
-                  ),
+                //   child: TextField(
+                //     controller: _teamNameController, // Asigna el controlador
+                //     decoration: const InputDecoration(
+                //       labelText: 'Team Name?',
+                //       labelStyle: TextStyle(color: Colors.white),
+                //       enabledBorder: UnderlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.white),
+                //       ),
+                //       focusedBorder: UnderlineInputBorder(
+                //         borderSide: BorderSide(color: Colors.blue),
+                //       ),
+                //     ),
+                //   ),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -105,10 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       final teamProvider = Provider.of<TeamProvider>(context, listen: false);
                       final eventProvider = Provider.of<EventProvider>(context, listen: false);
                       bool teamFound = await teamProvider.findAndLoadTeamByName(teamName);
-
                       if (teamFound) {
-                        await eventProvider.executeOperationsForLocations(team_id: teamProvider.currentTeam!.id.toString());
-                        // TODO: addpokedexScreen 
+					  	final team_id = teamProvider.team_id;
+						await eventProvider.executeOperationsForLocations(team_id!);
+						// TODO: addpokedexScreen 
                         // Navigator.pushReplacement(
                         //   context,
                         //   MaterialPageRoute(builder: (context) => LoginScreen()),

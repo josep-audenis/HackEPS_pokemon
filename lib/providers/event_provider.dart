@@ -38,7 +38,7 @@ class EventProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> executeOperationsForLocations({required String team_id}) async {
+  Future<void> executeOperationsForLocations(String team_id) async {
     for (var location in _locationCodes) {
       try {
         final delayResponse = await _apiService.request(
@@ -46,20 +46,19 @@ class EventProvider extends ChangeNotifier {
           method: 'GET',
         );
 
-        if (delayResponse is Map<String, dynamic> &&
-            delayResponse['cooldown_period'] != null) {
+        if (delayResponse is Map<String, dynamic> && delayResponse['cooldown_period'] != null) {
           double cooldownPeriod = delayResponse['cooldown_period'];
 
+          cooldownPeriod = cooldownPeriod/10;
           int delay = cooldownPeriod.toInt();
 
           print('Tiempo de espera para la ubicación $location: $delay segundos');
-
           _timers[location]?.cancel();
 
           _timers[location] = Timer.periodic(
             Duration(seconds: delay),
             (_) async {
-              await _performPostForLocation(location, team_id);
+              await performPostForLocation(location, team_id);
             },
           );
         } else {
@@ -71,7 +70,7 @@ class EventProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _performPostForLocation(String location, String team_id) async {
+  Future<void> performPostForLocation(String location, String team_id) async {
     try {
       final postResponse = await _apiService.request(
         endpoint: 'events/$location',
