@@ -19,6 +19,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
         (index) => {
       'name': 'Pokémon $index',
       'imageUrl': 'https://m.media-amazon.com/images/I/61Wd-1u2zUL.__AC_SX300_SY300_QL70_ML2_.jpg',
+      'id': '22',
     },
   );
 
@@ -201,7 +202,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetallesPokemonScreen(pokemon: item),
+                              builder: (context) => DetallesPokemonScreen(pokemonId: item['id']!),
                             ),
                           );
                         },
