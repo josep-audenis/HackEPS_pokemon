@@ -26,5 +26,10 @@ class Tournament {
   });
 
   factory Tournament.fromJson(Map<String, dynamic> json) => _$TournamentFromJson(json);
+
   Map<String, dynamic> toJson() => _$TournamentToJson(this);
+
+  get canRegister => can_register;
+
+  get tournamentCombats => tournament_combats;
 }

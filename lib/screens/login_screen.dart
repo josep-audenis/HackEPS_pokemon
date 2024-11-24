@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     child: const Text(
-                      'Login!!!',
+                      'Login',
                       style: TextStyle(
                         fontSize: 20.0,
                       ),

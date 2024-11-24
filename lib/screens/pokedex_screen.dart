@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lspokedex/providers/event_provider.dart';
 import 'package:lspokedex/providers/team_provider.dart';
+import 'package:lspokedex/screens/tournament_screen.dart';
 import 'package:lspokedex/utills/constants.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -381,7 +382,12 @@ class _PokedexScreenState extends State<PokedexScreen> {
                       FloatingActionButton(
                         heroTag: 'right',
                         onPressed: () {
-                          // Acción derecha
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TournamentScreen(),
+                            ),
+                          );
                         },
                         backgroundColor: Colors.grey,
                         child: Column(
