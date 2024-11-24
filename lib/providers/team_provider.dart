@@ -77,7 +77,8 @@ class TeamProvider extends ChangeNotifier {
     }
 
     return false;
-    
+  }
+
   List<String> getPokemonsIds () {
     List<String> list = List.empty();
     for (var pokemon in _currentTeam!.captured_pokemons) {
