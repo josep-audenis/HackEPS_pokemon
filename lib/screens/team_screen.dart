@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:lspokedex/providers/team_provider.dart';
-import 'package:provider/provider.dart';
 
 class TeamScreen extends StatelessWidget {
-  
+  const TeamScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final teamProvider = Provider.of<TeamProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Perfil de Usuario'),
+        title: const Text('Team Screen'),
       ),
       body: Center(
         child: Text(
-          'Hola',
+          'Adio',  // Aquí está el texto "Adio"
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+            fontSize: 30,       // Tamaño de fuente
+            fontWeight: FontWeight.bold,  // Estilo en negrita
+            color: Colors.black, // Color del texto
           ),
         ),
       ),
     );
-
-
   }
 }
