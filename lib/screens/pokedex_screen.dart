@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lspokedex/models/pokemon.dart';
+import 'package:lspokedex/screens/user_profile_screen.dart';
 
 import 'detalles_pokemon_screen.dart';
 
@@ -311,8 +312,15 @@ class _PokedexScreenState extends State<PokedexScreen> {
                       FloatingActionButton(
                         heroTag: 'left',
                         onPressed: () {
-                          // Acción izquierda
+                          // Acción para abrir la pantalla de usuario
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserProfileScreen(),
+                            ),
+                          );
                         },
+
                         backgroundColor: Colors.grey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
