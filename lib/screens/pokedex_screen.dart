@@ -3,6 +3,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lspokedex/models/pokemon.dart';
 import 'package:lspokedex/screens/user_profile_screen.dart';
+import 'package:lspokedex/providers/pokemon_provider.dart';
 
 import 'detalles_pokemon_screen.dart';
 
@@ -14,18 +15,12 @@ class PokedexScreen extends StatefulWidget {
 }
 
 class _PokedexScreenState extends State<PokedexScreen> {
-  // Lista de Pokémon de ejemplo
-  final List<Map<String, String>> allItems = List.generate(
-    10,
-        (index) => {
-      'name': 'Pokémon $index',
-      'imageUrl': 'https://m.media-amazon.com/images/I/61Wd-1u2zUL.__AC_SX300_SY300_QL70_ML2_.jpg',
-      'id': '22',
-    },
-  );
+
 
   // Controlador de búsqueda
   TextEditingController _searchController = TextEditingController();
+  PokemonProvider _pokemonProvider = PokemonProvider();
+
 
   // Lista filtrada de elementos según la búsqueda
   List<Map<String, String>> filteredItems = [];
@@ -33,20 +28,37 @@ class _PokedexScreenState extends State<PokedexScreen> {
   @override
   void initState() {
     super.initState();
-    // Inicializamos la lista filtrada con todos los elementos
-    filteredItems = allItems;
-
-    // Escuchamos los cambios en el campo de búsqueda
+    _fetchPokemons(); // Cargar datos desde la API
     _searchController.addListener(_filterItems);
+  }
+
+  Future<void> _fetchPokemons() async {
+    try {
+      // Obtén la lista de Pokémon desde la API
+      final pokemons = await _pokemonProvider.getPokemons();
+
+      // Transforma los datos a una lista de Map<String, String>
+      setState(() {
+        filteredItems = pokemons.map((pokemon) {
+          print('Copiando Pokémon: ${pokemon.name}');
+          return {
+            'id': pokemon.id.toString(),
+            'name': pokemon.name,
+            'imageUrl': pokemon.image,
+          };
+        }).toList();
+      });
+    } catch (e) {
+      print('Error al obtener Pokémons: $e');
+    }
   }
 
   // Método para filtrar los elementos según el texto de búsqueda
   void _filterItems() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      filteredItems = allItems
-          .where((item) =>
-          item['name']!.toLowerCase().contains(query))
+      filteredItems = filteredItems
+          .where((item) => item['name']!.toLowerCase().contains(query))
           .toList();
     });
   }
@@ -155,7 +167,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
               onPressed: () {
                 showSearch(
                   context: context,
-                  delegate: PokedexSearchDelegate(allItems),
+                  delegate: PokedexSearchDelegate(filteredItems),
                 );
               },
             ),
