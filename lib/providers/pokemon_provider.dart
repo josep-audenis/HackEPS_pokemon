@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:lspokedex/services/api_service.dart';
 import 'package:lspokedex/models/pokemon.dart';
 
-class PokemonProvider {
+class PokemonProvider extends ChangeNotifier{
   final ApiService _apiService = ApiService();
 
   Future<List<Map<String, String>>> getFilteredPokemons() async {

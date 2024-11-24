@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lspokedex/providers/pokemon_provider.dart';
 import 'package:provider/provider.dart';
 import 'providers/event_provider.dart';
 import 'providers/team_provider.dart';
@@ -15,6 +16,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => eventProvider),
         ChangeNotifierProvider(create: (_) => TeamProvider()),
+        ChangeNotifierProvider(create: (_) => PokemonProvider()),
       ],
       child: const MyApp(),
     ),
