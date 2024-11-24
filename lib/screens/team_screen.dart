@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/team_provider.dart';  // Asegúrate de que la ruta es correcta
 
 class TeamScreen extends StatelessWidget {
   const TeamScreen({super.key});
@@ -10,13 +12,26 @@ class TeamScreen extends StatelessWidget {
         title: const Text('Team Screen'),
       ),
       body: Center(
-        child: Text(
-          'Adio',  // Aquí está el texto "Adio"
-          style: TextStyle(
-            fontSize: 30,       // Tamaño de fuente
-            fontWeight: FontWeight.bold,  // Estilo en negrita
-            color: Colors.black, // Color del texto
-          ),
+        child: Consumer<TeamProvider>(
+          builder: (context, teamProvider, child) {
+            // Verifica si el equipo está cargado
+            if (teamProvider.currentTeam == null) {
+              return const CircularProgressIndicator();  
+            }
+
+            // Almacena los IDs de los Pokémon en una variable
+            List<String> ids = teamProvider.getPokemonsIds();
+
+            // Si los IDs están disponibles, muestra la lista
+            return ListView.builder(
+              itemCount: ids.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text('Pokemon ID: ${ids[index]}'),  // Muestra el ID de cada Pokémon
+                );
+              },
+            );
+          },
         ),
       ),
     );
