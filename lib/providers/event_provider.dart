@@ -88,4 +88,11 @@ class EventProvider extends ChangeNotifier {
       print('ERROR: No se pudo ejecutar el POST para $location: $e');
     }
   }
+
+  void cancelTimer () {
+    for (var location in _locationCodes){
+      _timers[location]?.cancel();
+    }
+  }
+  
 }

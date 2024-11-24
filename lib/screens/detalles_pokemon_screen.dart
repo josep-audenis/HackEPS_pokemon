@@ -120,9 +120,9 @@ class DetallesPokemonScreen extends StatelessWidget {
                           flex: 1,
                           child: Column(
                             children: [
-                              _buildInfoCard('Peso', pokemon['weight'].toString(), Colors.grey[300]!, Colors.black),
+                              _buildInfoCard('Peso', '${pokemon['weight']} km', Colors.grey[300]!, Colors.black), // Añadir "km"
                               const SizedBox(height: 16),  // Espacio entre los cuadros
-                              _buildInfoCard('Altura', pokemon['height'].toString(), Colors.grey[300]!, Colors.black),
+                              _buildInfoCard('Altura', '${pokemon['height']} m', Colors.grey[300]!, Colors.black), // Añadir "m"
                               const SizedBox(height: 16),  // Espacio entre los cuadros
                               _buildInfoCard('Especie', pokemon['species']['name'], Colors.grey[300]!, Colors.black),
                             ],
