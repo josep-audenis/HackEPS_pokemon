@@ -37,10 +37,10 @@ class _LoginScreenState extends State<LoginScreen> {
           // Imagen Pikachu detrás de todos los elementos
           Positioned(
             bottom: -100.0, // Distancia desde la parte inferior
-            right: -100.0,  // Distancia desde la parte derecha
+            right: -100.0, // Distancia desde la parte derecha
             child: Image.asset(
               'assets/images/pikachu.png',
-              width: 500,  // Tamaño específico de la imagen
+              width: 500, // Tamaño específico de la imagen
               height: 500, // Tamaño específico de la imagen
             ),
           ),
@@ -81,20 +81,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 80.0),
 
-                //   child: TextField(
-                //     controller: _teamNameController, // Asigna el controlador
-                //     decoration: const InputDecoration(
-                //       labelText: 'Team Name?',
-                //       labelStyle: TextStyle(color: Colors.white),
-                //       enabledBorder: UnderlineInputBorder(
-                //         borderSide: BorderSide(color: Colors.white),
-                //       ),
-                //       focusedBorder: UnderlineInputBorder(
-                //         borderSide: BorderSide(color: Colors.blue),
-                //       ),
-                //     ),
-                //   ),
-
+                  //   child: TextField(
+                  //     controller: _teamNameController, // Asigna el controlador
+                  //     decoration: const InputDecoration(
+                  //       labelText: 'Team Name?',
+                  //       labelStyle: TextStyle(color: Colors.white),
+                  //       enabledBorder: UnderlineInputBorder(
+                  //         borderSide: BorderSide(color: Colors.white),
+                  //       ),
+                  //       focusedBorder: UnderlineInputBorder(
+                  //         borderSide: BorderSide(color: Colors.blue),
+                  //       ),
+                  //     ),
+                  //   ),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -111,21 +110,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       final eventProvider = Provider.of<EventProvider>(context, listen: false);
                       bool teamFound = await teamProvider.findAndLoadTeamByName(teamName);
                       if (teamFound) {
-
-					  	          final team_id = teamProvider.team_id;
-						             await eventProvider.executeOperationsForLocations(team_id!);
-						
-                         Navigator.pushReplacement(
+                        final team_id = teamProvider.team_id;
+                        executeOperationsForLocationsInBackground(eventProvider, team_id!);
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const PokedexScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const PokedexScreen()),
                         );
-
                       } else {
                         showDialog(
                           context: context,
                           builder: (context) {
                             Future.delayed(const Duration(seconds: 2), () {
-                              Navigator.of(context).pop(); // Cierra el diálogo automáticamente
+                              Navigator.of(context)
+                                  .pop(); // Cierra el diálogo automáticamente
                             });
                             return AlertDialog(
                               content: const Text(
@@ -162,4 +160,10 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+}
+
+
+Future<void> executeOperationsForLocationsInBackground(EventProvider eventProvider, String teamId) async {
+  await Future.delayed(Duration.zero); 
+  await eventProvider.executeOperationsForLocations(teamId);
 }
