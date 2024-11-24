@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lspokedex/utills/constants.dart';
 import '../models/team.dart';
 import '../services/api_service.dart';
 
@@ -7,18 +8,16 @@ class TeamProvider extends ChangeNotifier {
 
   Team? _currentTeam;
   Team? get currentTeam => _currentTeam;
+  String? get team_id => _currentTeam?.id;
 
   Future<bool> findAndLoadTeamByName(String teamName) async {
     try {
-      final response = await _apiService.request(endpoint: 'teams', method: 'GET');
+      final response = await _apiService.request(endpoint: 'teams/$teamId', method: 'GET');
       
-      List<dynamic> teams = response;
-      List<Map<String, dynamic>> mappedTeams = teams.map((team) => Map<String, dynamic>.from(team)).toList();
-
-      final teamData = mappedTeams.firstWhere((team) => team['name'] == teamName, orElse: () => {});
+      // List<dynamic> teams = response;
       
-      if (teamData.isNotEmpty) {
-        _currentTeam = Team.fromJson(teamData);
+      if (response != null) {
+        _currentTeam = Team.fromJson(response);
         notifyListeners();
         return true;    // Equip trobat i guardat :)
       } else {
