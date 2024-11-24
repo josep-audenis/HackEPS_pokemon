@@ -138,7 +138,7 @@ class DetallesPokemonScreen extends StatelessWidget {
 
   Widget _buildInfoCard(String label, String value, Color backgroundColor, Color textColor) {
     return Container(
-      width: 90,
+      width: 110,
       height: 65,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
