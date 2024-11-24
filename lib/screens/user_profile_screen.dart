@@ -1,184 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/team_provider.dart';
 
 class UserProfileScreen extends StatelessWidget {
-  // Datos de ejemplo
-  final List<String> creatorsImages = [
-    'assets/images/davidCard.png',
-    'assets/images/josepCard.png',
-    'assets/images/marinaCard.png',
-  ];
-
-  final int pveScore = 0;
-  final int pvpScore = 0;
-  final int pokedexScore = 0;
-  final List<String> capturedPokemons = [];
-
   @override
   Widget build(BuildContext context) {
+    final teamProvider = Provider.of<TeamProvider>(context);
+
+    // Get team-related scores and data
+    final pveScore = teamProvider.currentTeam?.pve_score ?? 0;
+    final pvpScore = teamProvider.currentTeam?.pvp_score ?? 0;
+    final pokedexScore = teamProvider.currentTeam?.pokedex_score ?? 0;
+    final capturedPokemons = teamProvider.currentTeam?.captured_pokemons ?? [];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Equip Hackathon"),
-        backgroundColor: Colors.transparent, // Eliminar fondo del AppBar
-        elevation: 0, // Elimina la sombra debajo del AppBar
+        title: const Text("Equip Hackathon"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Stack(
         children: [
-          // Imagen de fondo ocupando la mitad inferior de la pantalla
           Positioned(
-            bottom: 0, // Alinea la imagen al fondo
+            bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height / 2, // La mitad de la altura de la pantalla
+              height: MediaQuery.of(context).size.height / 2,
               child: Image.network(
                 'https://pokemonletsgo.pokemon.com/assets/img/how-to-play/hero-img.png',
-                fit: BoxFit.cover, // Hace que la imagen ocupe todo el contenedor
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          // Capa blanca semi-transparente encima de la imagen
           Positioned.fill(
             child: Container(
-              color: Colors.white.withOpacity(0.6), // Capa blanca semi-transparente
+              color: Colors.white.withOpacity(0.6),
             ),
           ),
-          // Contenido principal sobre la imagen y la capa blanca
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20),
-
-                // Es mostrarán imágenes del equipo
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: creatorsImages.map((imagePath) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Container(
-                        width: 100,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8), // Bordes redondeados
-                          image: DecorationImage(
-                            image: AssetImage(imagePath),
-                            fit: BoxFit.cover, // Ajuste de imagen dentro del contenedor
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                  children: [
+                    Image.asset('assets/images/davidCard.png', width: 100, height: 150),
+                    const SizedBox(width: 8),
+                    Image.asset('assets/images/josepCard.png', width: 100, height: 150),
+                    const SizedBox(width: 8),
+                    Image.asset('assets/images/marinaCard.png', width: 100, height: 150),
+                  ],
                 ),
-                SizedBox(height: 20),
-
-                // Cuadrícula con nombre y valor
+                const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.all(8.0), // Padding extra alrededor de la tabla
+                  padding: const EdgeInsets.all(8.0),
                   child: Table(
                     border: TableBorder.all(
-                      color: Colors.black, // Color de los bordes
-                      width: 1, // Grosor del borde
-                      borderRadius: BorderRadius.circular(5), // Bordes redondeados
+                      color: Colors.black,
+                      width: 1,
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     columnWidths: {
-                      0: FixedColumnWidth(250),  // Aumentamos más el ancho de la primera columna
-                      1: FlexColumnWidth(),  // La segunda columna se ajustará al espacio disponible
+                      0: FixedColumnWidth(250),
+                      1: FlexColumnWidth(),
                     },
                     children: [
-                      // Fila 1: Fondo gris
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300], // Color gris para las filas impares
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "PVE Score",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center( // Centrar el texto en la segunda columna
-                              child: Text("$pveScore", style: TextStyle(fontSize: 18)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Fila 2: Fondo blanco
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.white, // Color blanco para las filas pares
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "PVP Score",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center( // Centrar el texto en la segunda columna
-                              child: Text("$pvpScore", style: TextStyle(fontSize: 18)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Fila 3: Fondo gris
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300], // Color gris para las filas impares
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Pokedex Score",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center( // Centrar el texto en la segunda columna
-                              child: Text("$pokedexScore", style: TextStyle(fontSize: 18)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Fila 4: Fondo blanco
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.white, // Color blanco para las filas pares
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Pokémon Capturados",
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center( // Centrar el texto en la segunda columna
-                              child: Text("${capturedPokemons.length}", style: TextStyle(fontSize: 18)),
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildTableRow("PVE Score", pveScore.toString(), isGray: true),
+                      _buildTableRow("PVP Score", pvpScore.toString(), isGray: false),
+                      _buildTableRow("Pokedex Score", pokedexScore.toString(), isGray: true),
+                      _buildTableRow("Pokémon Capturados", capturedPokemons.length.toString(), isGray: false),
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // Helper function to create table rows
+  TableRow _buildTableRow(String label, String value, {bool isGray = false}) {
+    return TableRow(
+      decoration: BoxDecoration(
+        color: isGray ? Colors.grey[300] : Colors.white,
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(value, style: const TextStyle(fontSize: 18)),
+          ),
+        ),
+      ],
     );
   }
 }
