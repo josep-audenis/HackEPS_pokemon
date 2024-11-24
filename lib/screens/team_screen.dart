@@ -113,11 +113,20 @@ class TeamScreen extends StatelessWidget {
                                   Center(
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text('Evolución de ${pokemon['name']}'),
-                                          ),
-                                        );
+                                        int id = pokemon['id'];
+                                        if (((teamProvider.currentTeam?.captured_pokemons.where((pokemon) => pokemon.pokemon_id == id))?.length ?? 0) >= 3){
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Evolution ${pokemon['name']}'),
+                                            ),
+                                          );
+                                        } else {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('Cannot evolve ${pokemon['name']}'),
+                                            ),
+                                          );
+                                        }
                                       },
                                       child: const Text('Evolution'),
                                     ),
