@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lspokedex/providers/event_provider.dart';
+import 'package:lspokedex/providers/team_provider.dart';
+import 'package:lspokedex/utills/constants.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lspokedex/models/pokemon.dart';
+import 'package:lspokedex/screens/user_profile_screen.dart';
+import 'package:lspokedex/providers/pokemon_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'detalles_pokemon_screen.dart';
 
@@ -13,39 +19,45 @@ class PokedexScreen extends StatefulWidget {
 }
 
 class _PokedexScreenState extends State<PokedexScreen> {
-  // Lista de Pokémon de ejemplo
-  final List<Map<String, String>> allItems = List.generate(
-    10,
-        (index) => {
-      'name': 'Pokémon $index',
-      'imageUrl': 'https://m.media-amazon.com/images/I/61Wd-1u2zUL.__AC_SX300_SY300_QL70_ML2_.jpg',
-      'id': '22',
-    },
-  );
 
+  
   // Controlador de búsqueda
   TextEditingController _searchController = TextEditingController();
+  
+  
+  
+  PokemonProvider _pokemonProvider = PokemonProvider();
+
 
   // Lista filtrada de elementos según la búsqueda
   List<Map<String, String>> filteredItems = [];
+  List<Map<String, String>> _originalItems = [];
 
   @override
   void initState() {
     super.initState();
-    // Inicializamos la lista filtrada con todos los elementos
-    filteredItems = allItems;
-
-    // Escuchamos los cambios en el campo de búsqueda
+    _fetchPokemons(); // Cargar datos desde la API
     _searchController.addListener(_filterItems);
+  }
+
+  Future<void> _fetchPokemons() async {
+    try {
+      // Obtén la lista de Pokémon desde la API
+      _originalItems  = await _pokemonProvider.getFilteredPokemons();
+      setState(() {
+        filteredItems = _originalItems;
+      });
+    } catch (e) {
+      print('Error al obtener Pokémons: $e');
+    }
   }
 
   // Método para filtrar los elementos según el texto de búsqueda
   void _filterItems() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      filteredItems = allItems
-          .where((item) =>
-          item['name']!.toLowerCase().contains(query))
+      filteredItems = _originalItems
+          .where((item) => item['name']!.toLowerCase().contains(query))
           .toList();
     });
   }
@@ -79,6 +91,9 @@ class _PokedexScreenState extends State<PokedexScreen> {
 
   /// Muestra el escáner QR en un panel flotante.
   void _showScanner(BuildContext context) async {
+    final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+    final eventProvider = Provider.of<EventProvider>(context, listen: false);
+
     // Verifica y solicita permisos antes de abrir la cámara
     await _requestCameraPermission(context);
 
@@ -119,6 +134,10 @@ class _PokedexScreenState extends State<PokedexScreen> {
                             : 'Código no detectado';
 
                         print('Código QR detectado: $code');
+                        List<String> parts = code.split('/');
+                        eventProvider.cancelTimer();
+                        eventProvider.performPostForLocation(parts.last, teamId);
+                        eventProvider.executeOperationsForLocations(teamId);
                         Navigator.pop(context);
                       },
                     ),
@@ -154,7 +173,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
               onPressed: () {
                 showSearch(
                   context: context,
-                  delegate: PokedexSearchDelegate(allItems),
+                  delegate: PokedexSearchDelegate(filteredItems),
                 );
               },
             ),
@@ -311,8 +330,15 @@ class _PokedexScreenState extends State<PokedexScreen> {
                       FloatingActionButton(
                         heroTag: 'left',
                         onPressed: () {
-                          // Acción izquierda
+                          // Acción para abrir la pantalla de usuario
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserProfileScreen(),
+                            ),
+                          );
                         },
+
                         backgroundColor: Colors.grey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

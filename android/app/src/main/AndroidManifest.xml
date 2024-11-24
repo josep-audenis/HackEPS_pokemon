@@ -8,6 +8,7 @@
 
     <application
         android:label="lspokedex"
+        android:enableOnBackInvokedCallback="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
