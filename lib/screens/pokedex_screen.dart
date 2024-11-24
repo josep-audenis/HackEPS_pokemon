@@ -24,6 +24,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
 
   // Lista filtrada de elementos según la búsqueda
   List<Map<String, String>> filteredItems = [];
+  List<Map<String, String>> _originalItems = [];
 
   @override
   void initState() {
@@ -35,18 +36,9 @@ class _PokedexScreenState extends State<PokedexScreen> {
   Future<void> _fetchPokemons() async {
     try {
       // Obtén la lista de Pokémon desde la API
-      final pokemons = await _pokemonProvider.getPokemons();
-
-      // Transforma los datos a una lista de Map<String, String>
+      _originalItems  = await _pokemonProvider.getFilteredPokemons();
       setState(() {
-        filteredItems = pokemons.map((pokemon) {
-          print('Copiando Pokémon: ${pokemon.name}');
-          return {
-            'id': pokemon.id.toString(),
-            'name': pokemon.name,
-            'imageUrl': pokemon.image,
-          };
-        }).toList();
+        filteredItems = _originalItems;
       });
     } catch (e) {
       print('Error al obtener Pokémons: $e');
@@ -57,7 +49,7 @@ class _PokedexScreenState extends State<PokedexScreen> {
   void _filterItems() {
     final query = _searchController.text.toLowerCase();
     setState(() {
-      filteredItems = filteredItems
+      filteredItems = _originalItems
           .where((item) => item['name']!.toLowerCase().contains(query))
           .toList();
     });
