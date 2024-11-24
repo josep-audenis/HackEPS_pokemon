@@ -11,7 +11,7 @@ part 'pokemon.g.dart';
 
 @JsonSerializable()
 class Pokemon {
-  final int id;
+  int id;
   final String name;
   final List<Ability> abilities;
   final String cries;
@@ -166,73 +166,11 @@ class Pokemon {
 //   Map<String, dynamic> toJson() => _$TeamToJson(this);
 // }
 
-// @JsonSerializable()
-// class Tournament {
-//   final String id;
-//   final String? time;
-//   final bool can_register;
-//   final List<TournamentTeam> teams;
-//   final String? winner;
-//   final List<TournamentTeamPosition> teams_positions;
-//   final List<TournamentCombat> tournament_combats;
 
-//   Tournament({
-//     required this.id,
-//     this.time,
-//     this.can_register = true,
-//     this.teams = const [],
-//     this.winner,
-//     this.teams_positions = const [],
-//     this.tournament_combats = const [],
-//   });
 
-//   factory Tournament.fromJson(Map<String, dynamic> json) => _$TournamentFromJson(json);
-//   Map<String, dynamic> toJson() => _$TournamentToJson(this);
-// }
 
-// @JsonSerializable()
-// class TournamentCombat {
-//   final List<String> teams;
-//   final String winner;
-//   final List<TournamentTurn> turns;
 
-//   TournamentCombat({
-//     required this.teams,
-//     required this.winner,
-//     this.turns = const [],
-//   });
 
-//   factory TournamentCombat.fromJson(Map<String, dynamic> json) => _$TournamentCombatFromJson(json);
-//   Map<String, dynamic> toJson() => _$TournamentCombatToJson(this);
-// }
-
-// @JsonSerializable()
-// class TournamentTurn {
-//   final List<String> pokemons;
-//   final String winner;
-
-//   TournamentTurn({
-//     required this.pokemons,
-//     required this.winner,
-//   });
-
-//   factory TournamentTurn.fromJson(Map<String, dynamic> json) => _$TournamentTurnFromJson(json);
-//   Map<String, dynamic> toJson() => _$TournamentTurnToJson(this);
-// }
-
-// @JsonSerializable()
-// class TournamentTeam {
-//   final String team_id;
-//   final List<String> pokemon_uuid_list;
-
-//   TournamentTeam({
-//     required this.team_id,
-//     this.pokemon_uuid_list = const [],
-//   });
-
-//   factory TournamentTeam.fromJson(Map<String, dynamic> json) => _$TournamentTeamFromJson(json);
-//   Map<String, dynamic> toJson() => _$TournamentTeamToJson(this);
-// }
 
 
 
