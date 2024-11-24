@@ -75,7 +75,7 @@ class EventProvider extends ChangeNotifier {
         endpoint: 'events/$location',
         method: 'POST',
         body: {
-          'team_id': team_id,
+          'team_id': "52c712ae-2f10-44e2-b734-e9659f5617f0"
         },
       );
 
@@ -88,4 +88,11 @@ class EventProvider extends ChangeNotifier {
       print('ERROR: No se pudo ejecutar el POST para $location: $e');
     }
   }
+
+  void cancelTimer () {
+    for (var location in _locationCodes){
+      _timers[location]?.cancel();
+    }
+  }
+  
 }

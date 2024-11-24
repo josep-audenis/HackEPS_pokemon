@@ -5,7 +5,7 @@ part 'capturedPokemon.g.dart';
 @JsonSerializable()
 class CapturedPokemon {
   final String id;
-  final int pokemon_id;
+  int pokemon_id;
 
   CapturedPokemon({
     required this.id,

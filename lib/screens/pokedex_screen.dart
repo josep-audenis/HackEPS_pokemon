@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lspokedex/screens/team_screen.dart';
+import 'package:lspokedex/providers/event_provider.dart';
+import 'package:lspokedex/providers/team_provider.dart';
+import 'package:lspokedex/screens/tournament_screen.dart';
+import 'package:lspokedex/utills/constants.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:lspokedex/models/pokemon.dart';
 import 'package:lspokedex/screens/user_profile_screen.dart';
 import 'package:lspokedex/providers/pokemon_provider.dart';
 import 'package:lspokedex/screens/team_screen.dart';
+import 'package:provider/provider.dart';
+
 
 import 'detalles_pokemon_screen.dart';
 
@@ -18,9 +24,12 @@ class PokedexScreen extends StatefulWidget {
 
 class _PokedexScreenState extends State<PokedexScreen> {
 
-
+  
   // Controlador de búsqueda
   TextEditingController _searchController = TextEditingController();
+  
+  
+  
   PokemonProvider _pokemonProvider = PokemonProvider();
 
 
@@ -86,6 +95,9 @@ class _PokedexScreenState extends State<PokedexScreen> {
 
   /// Muestra el escáner QR en un panel flotante.
   void _showScanner(BuildContext context) async {
+    final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+    final eventProvider = Provider.of<EventProvider>(context, listen: false);
+
     // Verifica y solicita permisos antes de abrir la cámara
     await _requestCameraPermission(context);
 
@@ -126,6 +138,10 @@ class _PokedexScreenState extends State<PokedexScreen> {
                             : 'Código no detectado';
 
                         print('Código QR detectado: $code');
+                        List<String> parts = code.split('/');
+                        eventProvider.cancelTimer();
+                        eventProvider.performPostForLocation(parts.last, teamId);
+                        eventProvider.executeOperationsForLocations(teamId);
                         Navigator.pop(context);
                       },
                     ),
@@ -374,7 +390,12 @@ class _PokedexScreenState extends State<PokedexScreen> {
                       FloatingActionButton(
                         heroTag: 'right',
                         onPressed: () {
-                          // Acción derecha
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TournamentScreen(),
+                            ),
+                          );
                         },
                         backgroundColor: Colors.grey,
                         child: Column(

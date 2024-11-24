@@ -24,7 +24,7 @@ class ApiService {
           response = await http.get(url, headers: headers);
           break;
         case 'POST':
-          response = await http.post(url, headers: headers, body: '{"team_id" : "52c712ae-2f10-44e2-b734-e9659f5617f0"}');
+          response = await http.post(url, headers: headers, body: jsonEncode(body));
           
           break;
         default:
