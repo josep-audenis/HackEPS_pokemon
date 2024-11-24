@@ -4,15 +4,15 @@ class UserProfileScreen extends StatelessWidget {
   // Datos de ejemplo
   final String name = "Pokedex Project";
   final List<String> creatorsImages = [
-      'assets/images/davidCard.png',
-      'assets/images/josepCard.png',
-      'assets/images/marinaCard.png',
+    'assets/images/davidCard.png',
+    'assets/images/josepCard.png',
+    'assets/images/marinaCard.png',
   ];
 
   final int pveScore = 0;
   final int pvpScore = 0;
   final int pokedexScore = 0;
-  final List<String> capturedPokemons = []; 
+  final List<String> capturedPokemons = [];
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +35,29 @@ class UserProfileScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
 
-            //Establim les 3 fotos dels participants de l'equip.
+            //Es mostren imatges de l'equip.
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: creatorsImages.map((imagePath) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage(imagePath), 
+                  child: Container(
+                    width: 100,  
+                    height: 150, 
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),  // Bordes redondeados (si los deseas)
+                      image: DecorationImage(
+                        image: AssetImage(imagePath),
+                        fit: BoxFit.cover,  // Ajustar la imagen dentro del contenedor
+                      ),
+                    ),
                   ),
                 );
               }).toList(),
             ),
             SizedBox(height: 20),
 
+            // Mostrar puntuaciones y Pokémon capturados
             Text(
               "PVE Score: $pveScore",
               style: TextStyle(fontSize: 18),
