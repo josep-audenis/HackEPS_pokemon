@@ -49,7 +49,6 @@ class EventProvider extends ChangeNotifier {
         if (delayResponse is Map<String, dynamic> && delayResponse['cooldown_period'] != null) {
           double cooldownPeriod = delayResponse['cooldown_period'];
 
-          cooldownPeriod = cooldownPeriod/10;
           int delay = cooldownPeriod.toInt();
 
           print('Tiempo de espera para la ubicación $location: $delay segundos');
