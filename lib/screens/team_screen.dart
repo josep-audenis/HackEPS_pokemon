@@ -8,14 +8,9 @@ class TeamScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Llamar a la función para cargar el equipo
-    Future<void> _loadTeam() async {
-      final teamProvider = Provider.of<TeamProvider>(context, listen: false);
-      // Asegúrate de pasar el nombre del equipo correcto
-      await teamProvider.findAndLoadTeamByName("teamName"); // Reemplaza "teamName" por el nombre adecuado
-    }
-
+    //final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+    
     // Llamamos a la función _loadTeam para cargar el equipo
-    _loadTeam();
 
     return Scaffold(
       appBar: AppBar(
