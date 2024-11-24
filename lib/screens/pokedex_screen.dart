@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lspokedex/screens/team_screen.dart';
 import 'package:lspokedex/providers/event_provider.dart';
 import 'package:lspokedex/providers/team_provider.dart';
 import 'package:lspokedex/screens/tournament_screen.dart';
@@ -8,7 +9,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:lspokedex/models/pokemon.dart';
 import 'package:lspokedex/screens/user_profile_screen.dart';
 import 'package:lspokedex/providers/pokemon_provider.dart';
+import 'package:lspokedex/screens/team_screen.dart';
 import 'package:provider/provider.dart';
+
 
 import 'detalles_pokemon_screen.dart';
 
@@ -300,7 +303,12 @@ class _PokedexScreenState extends State<PokedexScreen> {
                   FloatingActionButton(
                     heroTag: 'up',
                     onPressed: () {
-                      // Acción para la opción superior
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TeamScreen(),
+                        ),
+                      );
                     },
                     backgroundColor: Colors.grey,
                     child: Column(

@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          'Sign in with your team name',
+                          'Welcome to Pokedex',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
