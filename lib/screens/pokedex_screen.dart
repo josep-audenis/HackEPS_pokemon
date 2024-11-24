@@ -9,7 +9,6 @@ import 'package:lspokedex/models/pokemon.dart';
 import 'package:lspokedex/screens/user_profile_screen.dart';
 import 'package:lspokedex/providers/pokemon_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:lspokedex/screens/tournament_screen.dart';
 
 import 'detalles_pokemon_screen.dart';
 

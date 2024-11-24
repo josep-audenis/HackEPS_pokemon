@@ -29,7 +29,7 @@ class Tournament {
 
   Map<String, dynamic> toJson() => _$TournamentToJson(this);
 
-  get canRegister => null;
+  get canRegister => can_register;
 
-  get tournamentCombats => null;
+  get tournamentCombats => tournament_combats;
 }
