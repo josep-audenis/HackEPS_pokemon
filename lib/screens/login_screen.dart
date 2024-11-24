@@ -14,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Crea un controlador para el TextField
   final TextEditingController _teamNameController = TextEditingController();
 
   @override
@@ -27,25 +26,22 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 0,
       ),
       body: Stack(
-        fit: StackFit.expand, // Esto hace que la imagen ocupe todo el fondo
+        fit: StackFit.expand, 
         children: [
-          // Fondo de color
           Container(
-            color: const Color(0xFFcc544a), // El color de fondo de la pantalla
+            color: const Color(0xFFcc544a), 
           ),
 
-          // Imagen Pikachu detrás de todos los elementos
           Positioned(
-            bottom: -100.0, // Distancia desde la parte inferior
-            right: -100.0, // Distancia desde la parte derecha
+            bottom: -100.0, 
+            right: -100.0, 
             child: Image.asset(
               'assets/images/pikachu.png',
-              width: 500, // Tamaño específico de la imagen
-              height: 500, // Tamaño específico de la imagen
+              width: 500, 
+              height: 500, 
             ),
           ),
 
-          // Contenido encima de la imagen
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -77,23 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 50),
-                // TextField controlado por el TextEditingController
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 80.0),
 
-                  //   child: TextField(
-                  //     controller: _teamNameController, // Asigna el controlador
-                  //     decoration: const InputDecoration(
-                  //       labelText: 'Team Name?',
-                  //       labelStyle: TextStyle(color: Colors.white),
-                  //       enabledBorder: UnderlineInputBorder(
-                  //         borderSide: BorderSide(color: Colors.white),
-                  //       ),
-                  //       focusedBorder: UnderlineInputBorder(
-                  //         borderSide: BorderSide(color: Colors.blue),
-                  //       ),
-                  //     ),
-                  //   ),
                 ),
                 const SizedBox(height: 10),
                 Container(
@@ -123,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (context) {
                             Future.delayed(const Duration(seconds: 2), () {
                               Navigator.of(context)
-                                  .pop(); // Cierra el diálogo automáticamente
+                                  .pop(); 
                             });
                             return AlertDialog(
                               content: const Text(

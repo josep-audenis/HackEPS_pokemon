@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lspokedex/services/api_service.dart';  // Importar la clase ApiService
+import 'package:lspokedex/services/api_service.dart';  
 
 class DetallesPokemonScreen extends StatelessWidget {
-  final String pokemonId;  // Usamos pokemonId para hacer la consulta
+  final String pokemonId;
 
-  // Constructor para recibir solo el pokemonId
   const DetallesPokemonScreen({super.key, required this.pokemonId});
 
   @override
@@ -14,23 +13,21 @@ class DetallesPokemonScreen extends StatelessWidget {
         backgroundColor: const Color(0xFFe5282a),
         title: const Text(
           'Detalles Pokémon',
-          style: TextStyle(color: Colors.white),  // Título en blanco
+          style: TextStyle(color: Colors.white),  
         ),
       ),
       body: Container(
-        // Fondo con imagen desde los assets
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/pokedes-background.jpg'),  // Imagen desde assets
-            fit: BoxFit.cover,  // Asegura que la imagen cubra toda la pantalla
+            image: AssetImage('assets/images/pokedes-background.jpg'),  
+            fit: BoxFit.cover,  
           ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FutureBuilder(
-            // Realizamos la consulta a la API pasando el pokemonId
             future: ApiService().request(
-              endpoint: '/pokemons/$pokemonId',  // Endpoint que usa el pokemonId
+              endpoint: '/pokemons/$pokemonId',  
               method: 'GET',
             ),
             builder: (context, snapshot) {
@@ -45,29 +42,26 @@ class DetallesPokemonScreen extends StatelessWidget {
               if (snapshot.hasData) {
                 var pokemon = snapshot.data as Map<String, dynamic>;
 
-                // Mostrar los detalles del Pokémon una vez que los datos están disponibles
                 return ListView(
                   children: [
-                    const SizedBox(height: 80), // Espacio adicional arriba
+                    const SizedBox(height: 80),
 
-                    // Nombre del Pokémon
                     Align(
-                      alignment: Alignment.centerRight,  // Alinea a la derecha
+                      alignment: Alignment.centerRight,  
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 16.0),  // Opcional: añadir un poco de margen a la derecha
+                        padding: const EdgeInsets.only(right: 16.0),  
                         child: Text(
                           pokemon['name'],
                           style: const TextStyle(
-                            fontSize: 35,  // Aumenta el tamaño del texto
+                            fontSize: 35,  
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,  // Texto en blanco
+                            color: Colors.white,  
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
 
-                    // Imagen del Pokémon
                     Center(
                       child: Image.network(
                         pokemon['image'],
@@ -78,11 +72,9 @@ class DetallesPokemonScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
 
-                    // Disposición de las dos columnas
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Columna izquierda (Habilidades)
                         Expanded(
                           flex: 2,
                           child: Column(
@@ -92,7 +84,7 @@ class DetallesPokemonScreen extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(vertical: 4.0),
                                 child: Text(
                                   'Habilidades:',
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),  // Texto en blanco
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),  
                                 ),
                               ),
                               Padding(
@@ -102,10 +94,10 @@ class DetallesPokemonScreen extends StatelessWidget {
                                   children: [
                                     for (var ability in pokemon['abilities'])
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 16.0),  // Añade la tabulación
+                                        padding: const EdgeInsets.only(left: 16.0),  
                                         child: Text(
                                           '• ${ability['ability']['name']}',
-                                          style: const TextStyle(fontSize: 16, color: Colors.white),  // Texto en blanco
+                                          style: const TextStyle(fontSize: 16, color: Colors.white),  
                                         ),
                                       ),
                                   ],
@@ -115,15 +107,14 @@ class DetallesPokemonScreen extends StatelessWidget {
                           ),
                         ),
 
-                        // Columna derecha (Peso, Altura, Especie)
                         Expanded(
                           flex: 1,
                           child: Column(
                             children: [
-                              _buildInfoCard('Peso', '${pokemon['weight']} km', Colors.grey[300]!, Colors.black), // Añadir "km"
-                              const SizedBox(height: 16),  // Espacio entre los cuadros
-                              _buildInfoCard('Altura', '${pokemon['height']} m', Colors.grey[300]!, Colors.black), // Añadir "m"
-                              const SizedBox(height: 16),  // Espacio entre los cuadros
+                              _buildInfoCard('Peso', '${pokemon['weight']} kg', Colors.grey[300]!, Colors.black), 
+                              const SizedBox(height: 16),  
+                              _buildInfoCard('Altura', '${pokemon['height']} m', Colors.grey[300]!, Colors.black), 
+                              const SizedBox(height: 16),  
                               _buildInfoCard('Especie', pokemon['species']['name'], Colors.grey[300]!, Colors.black),
                             ],
                           ),
@@ -136,7 +127,7 @@ class DetallesPokemonScreen extends StatelessWidget {
                   ],
                 );
               } else {
-                return const Center(child: Text('No data found', style: TextStyle(color: Colors.white)));  // Texto en blanco
+                return const Center(child: Text('No data found', style: TextStyle(color: Colors.white)));  
               }
             },
           ),
@@ -145,30 +136,29 @@ class DetallesPokemonScreen extends StatelessWidget {
     );
   }
 
-  // Método para construir las tarjetas de información con fondo gris claro y texto negro
   Widget _buildInfoCard(String label, String value, Color backgroundColor, Color textColor) {
     return Container(
-      width: 70,
-      height: 60,
+      width: 90,
+      height: 65,
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: backgroundColor,  // Fondo gris claro
-        borderRadius: BorderRadius.circular(8.0),  // Bordes redondeados
+        color: backgroundColor,  
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,  // Centra el contenido
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             label,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: textColor,  // Texto negro
+              color: textColor,  
             ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(color: textColor),  // Texto negro
+            style: TextStyle(color: textColor),  
           ),
         ],
       ),

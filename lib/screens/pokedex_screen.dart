@@ -25,7 +25,6 @@ class PokedexScreen extends StatefulWidget {
 class _PokedexScreenState extends State<PokedexScreen> {
 
   
-  // Controlador de búsqueda
   TextEditingController _searchController = TextEditingController();
   
   
@@ -33,20 +32,18 @@ class _PokedexScreenState extends State<PokedexScreen> {
   PokemonProvider _pokemonProvider = PokemonProvider();
 
 
-  // Lista filtrada de elementos según la búsqueda
   List<Map<String, String>> filteredItems = [];
   List<Map<String, String>> _originalItems = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchPokemons(); // Cargar datos desde la API
+    _fetchPokemons(); 
     _searchController.addListener(_filterItems);
   }
 
   Future<void> _fetchPokemons() async {
     try {
-      // Obtén la lista de Pokémon desde la API
       _originalItems  = await _pokemonProvider.getFilteredPokemons();
       setState(() {
         filteredItems = _originalItems;
@@ -56,7 +53,6 @@ class _PokedexScreenState extends State<PokedexScreen> {
     }
   }
 
-  // Método para filtrar los elementos según el texto de búsqueda
   void _filterItems() {
     final query = _searchController.text.toLowerCase();
     setState(() {
@@ -66,15 +62,12 @@ class _PokedexScreenState extends State<PokedexScreen> {
     });
   }
 
-  /// Solicita el permiso para usar la cámara.
   Future<void> _requestCameraPermission(BuildContext context) async {
     var status = await Permission.camera.status;
 
     if (!status.isGranted) {
-      // Solicita permiso de cámara si no está concedido
       status = await Permission.camera.request();
       if (!status.isGranted) {
-        // Muestra un diálogo indicando que se necesita el permiso
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -93,19 +86,16 @@ class _PokedexScreenState extends State<PokedexScreen> {
     }
   }
 
-  /// Muestra el escáner QR en un panel flotante.
   void _showScanner(BuildContext context) async {
     final teamProvider = Provider.of<TeamProvider>(context, listen: false);
     final eventProvider = Provider.of<EventProvider>(context, listen: false);
 
-    // Verifica y solicita permisos antes de abrir la cámara
     await _requestCameraPermission(context);
 
-    // Muestra el escáner QR en un Bottom Sheet
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Fondo transparente
+      backgroundColor: Colors.transparent,
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
           initialChildSize: 0.6,
@@ -119,7 +109,6 @@ class _PokedexScreenState extends State<PokedexScreen> {
               ),
               child: Column(
                 children: [
-                  // Barra superior para deslizar
                   Container(
                     width: 50,
                     height: 5,
@@ -169,7 +158,6 @@ class _PokedexScreenState extends State<PokedexScreen> {
         backgroundColor: const Color(0xFFcc544a),
         title: const Text('Pokedex'),
         actions: [
-          // Campo de búsqueda en la barra de aplicaciones
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: IconButton(
@@ -186,12 +174,10 @@ class _PokedexScreenState extends State<PokedexScreen> {
       ),
       body: Stack(
         children: [
-          // Fondo principal
           Container(
             color: Colors.white,
           ),
 
-          // Campo de búsqueda
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -207,21 +193,19 @@ class _PokedexScreenState extends State<PokedexScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Cuadrícula de elementos filtrados
                 Expanded(
                   child: GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Número de columnas
-                      crossAxisSpacing: 8, // Espaciado horizontal
-                      mainAxisSpacing: 8, // Espaciado vertical
-                      childAspectRatio: 0.8, // Proporción entre ancho y alto
+                      crossAxisCount: 2, 
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8, 
+                      childAspectRatio: 0.8,
                     ),
                     itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
                       final item = filteredItems[index];
                       return GestureDetector(
                         onTap: () {
-                          // Navegar a la pantalla de detalles con el Pokémon seleccionado
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -243,18 +227,18 @@ class _PokedexScreenState extends State<PokedexScreen> {
                                     top: Radius.circular(10),
                                   ),
                                   child: Image.network(
-                                    item['imageUrl']!, // URL de la imagen
+                                    item['imageUrl']!, 
                                     fit: BoxFit.cover,
                                     loadingBuilder: (context, child, loadingProgress) {
                                       if (loadingProgress == null) {
-                                        return child; // Imagen cargada
+                                        return child; 
                                       }
                                       return const Center(
                                         child: CircularProgressIndicator(),
                                       );
                                     },
                                     errorBuilder: (context, error, stackTrace) => const Icon(
-                                      Icons.error, // Icono en caso de error
+                                      Icons.error, 
                                       color: Colors.red,
                                     ),
                                   ),
@@ -290,16 +274,15 @@ class _PokedexScreenState extends State<PokedexScreen> {
             ),
           ),
 
-          // Menú flotante
+          
           Positioned(
-            bottom: 50.0, // Espaciado desde el fondo
-            right: 20.0, // Espaciado desde la derecha
+            bottom: 50.0,
+            right: 20.0, 
             child: Container(
               padding: const EdgeInsets.all(0.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Opción superior
                   FloatingActionButton(
                     heroTag: 'up',
                     onPressed: () {
@@ -332,14 +315,12 @@ class _PokedexScreenState extends State<PokedexScreen> {
                   ),
                   const SizedBox(height: 8),
 
-                  // Opciones centrales
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       FloatingActionButton(
                         heroTag: 'left',
                         onPressed: () {
-                          // Acción para abrir la pantalla de usuario
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -418,11 +399,9 @@ class _PokedexScreenState extends State<PokedexScreen> {
                   ),
                   const SizedBox(height: 8),
 
-                  // Opción inferior
                   FloatingActionButton(
                     heroTag: 'down',
                     onPressed: () {
-                      // Acción inferior
                     },
                     backgroundColor: Colors.grey,
                     child: Column(
@@ -445,11 +424,6 @@ class _PokedexScreenState extends State<PokedexScreen> {
               ),
             ),
           ),
-
-
-
-
-
         ],
       ),
     );

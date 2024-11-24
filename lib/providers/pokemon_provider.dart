@@ -7,16 +7,13 @@ class PokemonProvider extends ChangeNotifier{
 
   Future<List<Map<String, String>>> getFilteredPokemons() async {
     try {
-      // Realizamos la solicitud GET para obtener los pokemones
       final response = await _apiService.request(
         endpoint: 'pokemons',
         method: 'GET',
       );
 
-      // Inicializamos la lista para almacenar los datos procesados
       List<Map<String, String>> filteredItems = [];
 
-      // Recorremos cada elemento del JSON y extraemos los campos necesarios
       for (var pokemonJson in response) {
         filteredItems.add({
           'id': pokemonJson['id'].toString(),
@@ -25,7 +22,6 @@ class PokemonProvider extends ChangeNotifier{
         });
       }
 
-      // Retornamos la lista procesada
       return filteredItems;
     } catch (e) {
       print('ERROR: $e');

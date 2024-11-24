@@ -103,7 +103,6 @@ class TournamentCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Botón o etiqueta
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(

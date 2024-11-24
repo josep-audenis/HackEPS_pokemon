@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/team_provider.dart'; // Ruta correcta
-import '../services/api_service.dart'; // Ruta correcta para el servicio API
-import 'detalles_pokemon_screen.dart'; // Ruta correcta
+import '../providers/team_provider.dart'; 
+import '../services/api_service.dart'; 
+import 'detalles_pokemon_screen.dart'; 
 
 class TeamScreen extends StatelessWidget {
   const TeamScreen({super.key});
@@ -17,20 +17,16 @@ class TeamScreen extends StatelessWidget {
       body: Center(
         child: Consumer<TeamProvider>(
           builder: (context, teamProvider, child) {
-            // Verifica si el equipo está cargado
             if (teamProvider.currentTeam == null) {
               return const CircularProgressIndicator();
             }
 
-            // Almacena los IDs de los Pokémon en una variable
             List<String> ids = teamProvider.getPokemonsIds();
 
-            // Si los IDs están disponibles, muestra la lista
             return ListView.builder(
               itemCount: ids.length,
               itemBuilder: (context, index) {
                 return FutureBuilder(
-                  // Llama a la API para obtener detalles del Pokémon
                   future: ApiService().request(
                     endpoint: '/pokemons/${ids[index]}',
                     method: 'GET',
@@ -53,10 +49,8 @@ class TeamScreen extends StatelessWidget {
                     if (snapshot.hasData) {
                       var pokemon = snapshot.data as Map<String, dynamic>;
 
-                      // Muestra el rectángulo con los detalles del Pokémon
                       return GestureDetector(
                         onTap: () {
-                          // Navega a la pantalla de detalles con el ID del Pokémon
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -67,7 +61,7 @@ class TeamScreen extends StatelessWidget {
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0), // Espaciado alrededor de cada tarjeta
+                          padding: const EdgeInsets.all(8.0), 
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
@@ -82,34 +76,31 @@ class TeamScreen extends StatelessWidget {
                               ],
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0), // Espaciado interno
+                              padding: const EdgeInsets.all(12.0), 
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // Detalles del Pokémon (nombre)
                                       Expanded(
                                         child: Text(
-                                          pokemon['name'], // Nombre del Pokémon
+                                          pokemon['name'], 
                                           style: const TextStyle(
-                                            fontSize: 22, // Tamaño de fuente más grande
+                                            fontSize: 22, 
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
-                                      // Imagen del Pokémon
                                       Image.network(
-                                        pokemon['image'], // URL de la imagen del Pokémon
-                                        height: 80, // Altura aumentada
-                                        width: 80,  // Ancho aumentado
+                                        pokemon['image'], 
+                                        height: 80, 
+                                        width: 80,  
                                         fit: BoxFit.cover,
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 10),
-                                  // Botón "Evolution" centrado
                                   Center(
                                     child: ElevatedButton(
                                       onPressed: () {

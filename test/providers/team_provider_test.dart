@@ -12,13 +12,9 @@ void main() {
     });
 
     test('findAndLoadTeamByName should load team data from real API', () async {
-      // Nombre del equipo que deseas buscar
-      const teamName = 'BipBop'; // Cambia este valor según el nombre del equipo que quieres probar
-
-      // Llamar a la función para buscar el equipo por nombre
+      const teamName = 'BipBop';
       final result = await teamProvider.findAndLoadTeamByName(teamName);
 
-      // Verificar si el equipo fue encontrado y los datos son correctos
       if (result) {
         print('Equipo encontrado: ${teamProvider.currentTeam}');
         expect(teamProvider.currentTeam, isNotNull);

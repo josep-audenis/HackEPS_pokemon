@@ -7,7 +7,6 @@ class UserProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final teamProvider = Provider.of<TeamProvider>(context);
 
-    // Get team-related scores and data
     final pveScore = teamProvider.currentTeam?.pve_score ?? 0;
     final pvpScore = teamProvider.currentTeam?.pvp_score ?? 0;
     final pokedexScore = teamProvider.currentTeam?.pokedex_score ?? 0;
@@ -83,7 +82,6 @@ class UserProfileScreen extends StatelessWidget {
     );
   }
 
-  // Helper function to create table rows
   TableRow _buildTableRow(String label, String value, {bool isGray = false}) {
     return TableRow(
       decoration: BoxDecoration(

@@ -17,8 +17,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => eventProvider),
         ChangeNotifierProvider(create: (_) => TeamProvider()),
-    		ChangeNotifierProvider(create: (_) => TournamentProvider()),
-
+    	ChangeNotifierProvider(create: (_) => TournamentProvider()),
         ChangeNotifierProvider(create: (_) => PokemonProvider()),
       ],
       child: const MyApp(),
