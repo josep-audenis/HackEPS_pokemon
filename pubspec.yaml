@@ -77,6 +77,9 @@ flutter:
     - assets/images/team.png
     - assets/images/pokedex.png
     - assets/images/pokedes-background.jpg
+    - assets/images/davidCard.png
+    - assets/images/josepCard.png
+    - assets/images/marinaCard.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
